@@ -1,0 +1,30 @@
+{
+  "vps": {
+    "host": "YOUR_VPS_IP",
+    "ssh_port": 22,
+    "ssh_user": "root",
+    "ssh_password": "YOUR_VPS_PASSWORD",
+    "frp_control_port": 7000,
+    "frp_web_port": 7500,
+    "frp_web_user": "admin",
+    "frp_web_password": "YOUR_FRP_WEB_PASSWORD"
+  },
+  "services": {
+    "ai-goofish-monitor": {
+      "production": {
+        "external_port": 8868,
+        "internal_port": 8000,
+        "local_ip": "127.0.0.1",
+        "frp_proxy_name": "node37-goofish-monitor-prod",
+        "description": "生产环境 - ai-goofish-monitor"
+      },
+      "development": {
+        "external_port": 8869,
+        "internal_port": 8001,
+        "local_ip": "127.0.0.1",
+        "frp_proxy_name": "node37-goofish-monitor-dev",
+        "description": "测试环境 - ai-goofish-monitor"
+      }
+    }
+  }
+}

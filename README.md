@@ -66,6 +66,32 @@ docker compose up -d
 - 商品图片会临时落到 `images/task_images_<task_name>/`，任务结束后默认会清理
 - 首次升级完成并确认 `data/app.sqlite3` 中数据正确后，可视部署方式决定是否继续保留旧的 `config.json`、`jsonl/`、`price_history/` 挂载
 
+### 🌐 FRP 部署配置
+
+本项目通过 FRP 暴露 Web 服务，配置如下：
+
+| 项目 | 值 |
+|------|-----|
+| **VPS地址** | 8.163.122.236 |
+| **FRP服务端口** | 7000 |
+| **Web访问地址** | http://8.163.122.236:8867 |
+| **本地服务端口** | 8000 |
+| **FRP代理名称** | node37-goofish-monitor |
+
+**FRP客户端配置（node37）：**
+```toml
+[[proxies]]
+name = "node37-goofish-monitor"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 8000
+remotePort = 8867
+```
+
+**访问方式：**
+- 内网：`http://node37:8000` 或 `http://192.168.68.98:8000`
+- 外网：`http://8.163.122.236:8867`
+
 ### 最少配置
 
 | 变量 | 说明 | 必填 |

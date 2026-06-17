@@ -4,6 +4,7 @@
 """
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+import os
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -117,11 +118,7 @@ app.include_router(accounts.router)
 # 旧的静态文件目录（用于截图等）
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# 挂载 Vue 3 前端构建产物
-# 注意：需要在所有 API 路由之后挂载，以避免覆盖 API 路由
-import os
-if os.path.exists("dist"):
-    app.mount("/assets", StaticFiles(directory="dist/assets"), name="assets")
+# Vue 3 前端构建产物 — 延迟到 catch-all 之后挂载
 
 
 # 健康检查端点
@@ -171,9 +168,13 @@ async def serve_spa(request: Request, full_path: str):
     Catch-all 路由，将所有非 API 请求重定向到 index.html
     这样可以支持 Vue Router 的 HTML5 History 模式
     """
-    # 如果请求的是静态资源（如 favicon.ico），返回 404
-    if full_path.endswith(('.ico', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.css', '.js', '.json')):
-        return JSONResponse(status_code=404, content={"error": "资源未找到"})
+    # 静态资源：从 dist/assets 或 static 目录返回
+    asset_path = f"dist/{full_path}"
+    if os.path.isfile(asset_path):
+        return FileResponse(asset_path)
+    static_path = f"static/{full_path}"
+    if os.path.isfile(static_path):
+        return FileResponse(static_path)
 
     # 其他所有路径都返回 index.html，让前端路由处理
     if os.path.exists("dist/index.html"):

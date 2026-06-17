@@ -92,7 +92,7 @@ def _resolve_browser_channel() -> str:
             )
             EDGE_DOCKER_WARNING_PRINTED = True
         return "chromium"
-    return "msedge" if LOGIN_IS_EDGE else "chrome"
+    return "msedge" if LOGIN_IS_EDGE else "chromium"
 
 
 def _should_analyze_images(task_config: dict) -> bool:
